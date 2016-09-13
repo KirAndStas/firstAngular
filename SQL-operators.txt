@@ -1,0 +1,27 @@
+/* Operator for creating a table with students names */
+CREATE TABLE students_names (id INTEGER, name TEXT PRIMARY KEY, FOREIGN KEY (testNumber) REFERENCES students_test(id));
+
+/* Operator for creating a table with students tests */
+CREATE TABLE students_test (id INTEGER PRIMARY KEY, FOREIGN KEY (student_name) REFERENCES students_names(name), testWhen DATE, exampleType TEXT, amountRight INTEGER, amountWrong Integer, resultRight INTEGER);
+
+/* Operator for creating a table with students wrong examples */
+CREATE TABLE wrongExamp (id INTEGER, FOREIGN KEY (test) REFERENCES students_test(id), example NUMERIC, answer INTEGER);
+
+/* Operator for creating a table with students result */
+CREATE TABLE studentResult (id INTEGER, FOREIGN KEY (student_name) REFERENCES students_names(name), amountRight INTEGER, amountWrong INTEGER);
+INSERT INTO studentResult (amountRight, amountWrong) SELECT (amountRight, amountWrong) FROM students_test;
+
+/* Operator for order a table with students_test by name and date */
+SELECT * FROM students_test ORDER BY testWhen;
+SELECT * FROM students_test ORDER BY student_name;
+
+/* Operator for order a table with students_test by name and date */
+UPDATE students_test SET resultRight = amountRight + amountWrong;
+UPDATE students_test SET resultRight = resultRight / amountRight;
+SELECT * FROM students_test WHERE testWhen BETWEEN dd/mm/yy AND dd/mm/yy;
+
+/* Operator for show students who have not done test */
+SELECT * FROM students_names WHERE testNumber IS NULL OR some_column = '';
+
+/* Operator for show students who have done test more than two times and have the result less than 50% */
+SELECT * FROM students_test WHERE resultRight < 50 AND (SELECT COUNT(*) FROM students_names WHERE testNumber > 0) > 3;
